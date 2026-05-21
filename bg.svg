@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1920 1080">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f50;
+      }
+
+      .cls-2 {
+        isolation: isolate;
+      }
+
+      .cls-3 {
+        font-size: 16.3px;
+        letter-spacing: -.04em;
+      }
+
+      .cls-3, .cls-4, .cls-5, .cls-6 {
+        font-family: BricolageGrotesque-ExtraBold, 'Bricolage Grotesque';
+        font-weight: 700;
+      }
+
+      .cls-4 {
+        font-size: 120px;
+        letter-spacing: -.04em;
+      }
+
+      .cls-7, .cls-8 {
+        fill: #fff;
+      }
+
+      .cls-8 {
+        mix-blend-mode: screen;
+        opacity: .5;
+      }
+
+      .cls-5 {
+        font-size: 22.2px;
+        letter-spacing: -.04em;
+      }
+
+      .cls-9 {
+        stroke: #fff;
+        stroke-width: 2px;
+      }
+
+      .cls-9, .cls-10 {
+        fill: none;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-6 {
+        font-size: 11px;
+        letter-spacing: -.04em;
+      }
+
+      .cls-10 {
+        stroke: #000;
+        stroke-width: 3px;
+      }
+    </style>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.6.0, SVG Export Plug-In . SVG Version: 1.2.0 Build 709)  -->
+  <g class="cls-2">
+    <g id="_レイヤー_2" data-name="レイヤー_2">
+      <rect class="cls-1" x="-23" y="-4" width="1967" height="1128"/>
+    </g>
+    <g id="_レイヤー_1" data-name="レイヤー_1">
+      <g>
+        <ellipse class="cls-7" cx="960" cy="734.31" rx="445.68" ry="119.3"/>
+        <path class="cls-8" d="M1555-15h-65.76l-931.54,697.11,1.29.08c-28.61,15.75-44.67,33.43-44.67,52.11,0,65.89,199.54,119.3,445.68,119.3s444.88-53.2,445.67-118.91h0S1555-15,1555-15Z"/>
+        <path class="cls-8" d="M365-14.61h65.76s931.54,697.11,931.54,697.11l-1.29.08c28.61,15.75,44.67,33.43,44.67,52.11,0,65.89-199.54,119.3-445.68,119.3-245.65,0-444.88-53.2-445.67-118.91h0S365-14.61,365-14.61Z"/>
+      </g>
+      <g>
+        <text class="cls-4" transform="translate(452 223.65) scale(1.4 1)"><tspan x="0" y="0">Rhyme-LIGHT</tspan></text>
+        <text class="cls-3" transform="translate(458.79 272.39) scale(1.4 1)"><tspan x="0" y="0">Let&apos;s have fun discovering unexpected rhymes.</tspan></text>
+      </g>
+      <text class="cls-6" transform="translate(1464.38 515.55) rotate(90) scale(1.4 1)"><tspan x="0" y="0">It supports English and Japanese.</tspan></text>
+      <line class="cls-10" x1="569.5" y1="749.33" x2="1170.5" y2="749.33"/>
+      <rect class="cls-10" x="1190.5" y="700.09" width="160" height="48.17"/>
+      <text class="cls-5" transform="translate(1214.91 730.57) scale(1.4 1)"><tspan x="0" y="0">Rhymin’</tspan></text>
+      <g>
+        <g>
+          <circle cx="911.5" cy="801" r="16"/>
+          <polyline class="cls-9" points="914.5 793 906.5 801 914.5 809"/>
+        </g>
+        <g>
+          <circle cx="1008.5" cy="801" r="16"/>
+          <polyline class="cls-9" points="1005.5 793 1013.5 801 1005.5 809"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,269 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ff5500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+.loading-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.floating-mic {
+    position: absolute;
+    left: 20%;
+    top: 25%;
+    width: 60%;
+    height: auto;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0px 30px 15px rgba(0,0,0,0.4));
+    z-index: 10;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px) rotate(-2deg); }
+    50% { transform: translateY(-20px) rotate(2deg); }
+    100% { transform: translateY(0px) rotate(-2deg); }
+}
+
+.quiz-prompt-container {
+    position: absolute;
+    left: 29%;
+    top: 15%;
+    width: 42%;
+    border-bottom: 3.5px solid #fff;
+    padding-bottom: 5px;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+}
+
+.quiz-prompt {
+    font-size: 5.04cqi;
+    font-family: 'Bricolage Grotesque', 'Noto Sans CJK JP', sans-serif;
+    font-weight: 800;
+    color: #000;
+    letter-spacing: -0.04em;
+    transform: scaleX(1.4);
+    transform-origin: center bottom;
+    white-space: nowrap;
+}
+
+/* Perfect 16:9 SVG matching container */
+.app-container {
+    position: relative;
+    width: 100vw;
+    height: 56.25vw; /* 1080 / 1920 * 100 */
+    max-height: 100vh;
+    max-width: 177.77vh; /* 1920 / 1080 * 100 */
+    background-color: #ff5500;
+    container-type: inline-size;
+}
+
+.bg-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Input Area overlay */
+/* Center of line is 870. Target text scaled width 601. Unscaled width = 429.28. 
+   429.28/1920 = 22.358%. 
+   Left = (870 - 214.64) / 1920 = 34.133% 
+*/
+.word-input {
+    position: absolute;
+    width: 22.358%;
+    left: 34.133%;
+    top: 65%;
+    height: 4.5%; /* 48.6 / 1080 */
+    font-size: 2.2cqi;
+    background: transparent;
+    border: none;
+    outline: none;
+    text-align: center;
+    font-family: 'Bricolage Grotesque', 'Noto Sans CJK JP', sans-serif;
+    font-weight: 800;
+    color: #000000;
+    transform: scaleX(1.4);
+    transform-origin: center bottom;
+    z-index: 10;
+}
+
+.result-display {
+    position: absolute;
+    width: 22.358%;
+    left: 34.133%;
+    top: 65%;
+    height: 4.5%;
+    font-size: 2.2cqi;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    font-family: 'Bricolage Grotesque', 'Noto Sans CJK JP', sans-serif;
+    font-weight: 800;
+    color: #000000;
+    cursor: pointer;
+    white-space: nowrap;
+    transform: scaleX(1.4);
+    transform-origin: center bottom;
+    z-index: 10;
+}
+
+.result-word {
+    display: block;
+    line-height: 1;
+}
+
+/* Rhymin Button Overlay */
+/* x="1190.5" y="700.09" width="160" height="48.17" */
+.rhymin-btn {
+    position: absolute;
+    left: 62.005%; /* 1190.5 / 1920 */
+    top: 64.823%;  /* 700.09 / 1080 */
+    width: 8.333%; /* 160 / 1920 */
+    height: 4.460%; /* 48.17 / 1080 */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-radius: 2px;
+    z-index: 10;
+}
+
+.rhymin-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.rhymin-btn:active {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* Match Info Display */
+.match-info {
+    position: absolute;
+    left: 50%;
+    top: 70.3%; /* Just below the line at 69.38% */
+    transform: translateX(-50%);
+    text-align: center;
+    font-family: 'Bricolage Grotesque', 'Noto Sans CJK JP', sans-serif;
+    font-weight: 800;
+    font-size: 1.5cqi;
+    color: #999;
+    z-index: 10;
+    transform: translateX(-50%) scaleX(1.4);
+}
+
+.stretch-text {
+    display: inline-block;
+    transform: scaleX(1.4);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.start-btn {
+    position: absolute;
+    left: 50%;
+    top: 65%;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: 25%;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 0.5s;
+}
+
+.start-btn:hover {
+    transform: translateX(-50%) scale(1.05);
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+.round-info {
+    position: absolute;
+    left: 50%;
+    top: 5%;
+    transform: translateX(-50%);
+    z-index: 5;
+    font-family: 'Bricolage Grotesque', 'Noto Sans CJK JP', sans-serif;
+    font-weight: 800;
+    color: #fff;
+    display: flex;
+    align-items: baseline;
+    gap: 1cqi;
+}
+
+.round-info .round-text {
+    font-size: 1.5cqi;
+}
+
+.round-info .round-num {
+    font-size: 5cqi;
+}
+
+.countdown-container {
+    position: absolute;
+    left: 10%;
+    top: 20%;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.timer-label-top, .timer-label-bottom {
+    font-size: 1.4cqi;
+    font-family: 'Bricolage Grotesque', 'Noto Sans CJK JP', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: #000;
+    transform: scaleX(1.4);
+    transform-origin: left;
+}
+
+.timer-label-top {
+    margin-bottom: 0cqi;
+}
+
+.timer-label-bottom {
+    margin-top: -0.7cqi;
+}
+
+.countdown-number {
+    font-size: 9.45cqi;
+    font-family: 'Bricolage Grotesque', 'Noto Sans CJK JP', sans-serif;
+    font-weight: 800;
+    color: #000;
+    letter-spacing: -0.04em;
+    transform: scaleX(1.4);
+    transform-origin: left;
+    line-height: 0.8;
+}
+
