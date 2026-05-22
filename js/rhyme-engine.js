@@ -130,39 +130,11 @@ class RhymeEngine {
         if (!this.isReady || !this.tokenizer) {
             return { error: true, vowels: null };
         }
-        
-        // 辞書にない新しい言葉や特殊な読み方の例外
-        const READING_EXCEPTIONS = {
-            "令和": "レイワ",
-            "平成": "ヘイセイ",
-            "eスポーツ": "イースポーツ",
-            "YouTuber": "ユーチューバー",
-            "ユーチューバー": "ユーチューバー",
-            "SNS": "エスエヌエス",
-            "DJ": "ディージェイ"
-        };
-        
-        if (READING_EXCEPTIONS[text]) {
-            return { error: false, vowels: getVowels(READING_EXCEPTIONS[text]) };
-        }
 
         const tokens = this.tokenizer.tokenize(text);
         let reading = "";
-        let hasUnknown = false;
-        
-        // すべてが1文字のひらがな/カタカナで構成されているか（適当な文字列の判定用）
-        let allSingleKana = true;
-        
+
         for (let token of tokens) {
-            if (token.word_type === 'UNKNOWN') {
-                hasUnknown = true;
-            }
-            
-            // 2文字以上のトークンがある、または漢字などが含まれている場合は意味のある言葉の可能性が高い
-            if (token.surface_form.length > 1 || !/^[\u3040-\u309F\u30A0-\u30FF]+$/.test(token.surface_form)) {
-                allSingleKana = false;
-            }
-            
             if (token.pronunciation) {
                 reading += token.pronunciation;
             } else if (token.reading) {
@@ -172,59 +144,33 @@ class RhymeEngine {
                 if (/^[\u3040-\u309F\u30A0-\u30FFー]+$/.test(surface)) {
                     reading += hiraToKana(surface);
                 } else {
-                    return { error: true, vowels: null, failedWord: surface, isUnknown: true };
+                    return { error: true, vowels: null, failedWord: surface };
                 }
             }
         }
-        
-        // 適当なひらがなの羅列（「あああ」等が1文字ずつに分割された場合）を無効にする
-        if (tokens.length > 1 && allSingleKana) {
-            hasUnknown = true;
-        }
-        
-        if (hasUnknown) {
-            // 未知語（ひらがな入力など）でも、独自の辞書にフリガナが存在すればセーフとする
-            let isValid = false;
-            if (typeof DICTIONARY !== 'undefined') {
-                for (let i = 0; i < DICTIONARY.length; i++) {
-                    if (DICTIONARY[i].k === reading || DICTIONARY[i].w === text) {
-                        isValid = true;
-                        break;
-                    }
-                }
-            }
-            if (!isValid) {
-                return { error: false, vowels: null, isUnknown: true };
-            }
-        }
-        
+
         return { error: false, vowels: getVowels(reading) };
     }
 
     judgeRhyme(promptVowels, userText) {
         let result = this.extractVowels(userText);
         if (result.error) return { error: true, failedWord: result.failedWord };
-        
-        if (result.isUnknown) {
-            return { error: false, score: 0, type: 'BOO', userVowels: null };
-        }
-        
+
         let userVowels = result.vowels;
         if (!userVowels) return { score: 0, type: 'BOO' };
-        
+
         let matches = 0;
         let minLen = Math.min(promptVowels.length, userVowels.length);
-        
-        // Match from the END (suffix rhyming is more important in hiphop)
+
         for (let i = 1; i <= minLen; i++) {
             if (promptVowels[promptVowels.length - i] === userVowels[userVowels.length - i]) {
                 matches++;
             }
         }
-        
+
         let ratio = matches / promptVowels.length;
         let type = 'BOO';
-        
+
         if (ratio === 1 && promptVowels.length === userVowels.length) {
             type = 'GOAT!!!!!';
         } else if (ratio >= 0.7) {
@@ -232,7 +178,7 @@ class RhymeEngine {
         } else if (ratio >= 0.4) {
             type = 'SO SO';
         }
-        
+
         return {
             error: false,
             score: Math.round(ratio * 100),
@@ -248,10 +194,8 @@ class RhymeEngine {
         let results = [];
         let seenKatakana = new Set();
         
-        // Helper function for DFS Grammar Search
         const searchGrammar = (targetVowels, template) => {
             let matches = [];
-            
             const dfs = (posIndex, currentVowelIndex, currentWords) => {
                 if (posIndex === template.length) {
                     if (currentVowelIndex === targetVowels.length) {
@@ -259,20 +203,15 @@ class RhymeEngine {
                     }
                     return;
                 }
-                
                 let remainingSlots = template.length - posIndex;
                 let remainingVowels = targetVowels.length - currentVowelIndex;
                 if (remainingSlots > remainingVowels) return;
-                
                 let requiredPos = template[posIndex];
                 let candidates = this.dictionary.filter(w => w.p === requiredPos);
-                
                 candidates.sort(() => Math.random() - 0.5);
-                
                 let branchLimit = 0;
                 for (let candidate of candidates) {
                     let v = candidate.v;
-                    // Strict prefix check
                     let isPrefix = true;
                     for (let i = 0; i < v.length; i++) {
                         if (targetVowels[currentVowelIndex + i] !== v[i]) {
@@ -280,40 +219,31 @@ class RhymeEngine {
                             break;
                         }
                     }
-                    
                     if (isPrefix) {
                         currentWords.push(candidate);
                         dfs(posIndex + 1, currentVowelIndex + v.length, currentWords);
                         currentWords.pop();
                         branchLimit++;
-                        if (branchLimit > 50) break; // Keep it fast
+                        if (branchLimit > 50) break;
                     }
                 }
             };
-            
             dfs(0, 0, []);
             return matches;
         };
 
-        // 1. Search for grammatical combinations that match exactly 100%
         for (let template of GRAMMAR_TEMPLATES) {
             let validMatches = searchGrammar(inputVowels, template);
             for (let match of validMatches) {
                 let kataStr = match.map(w => w.k).join('');
                 let kanjiStr = match.map(w => w.w).join('');
-                
                 if (!seenKatakana.has(kataStr) && kataStr !== inputWord) {
                     seenKatakana.add(kataStr);
-                    results.push({
-                        word: kataStr,
-                        matchType: `（${kanjiStr}）`,
-                        score: 100 + template.length // slight boost for complex grammar
-                    });
+                    results.push({ word: kataStr, matchType: `（${kanjiStr}）`, score: 100 + template.length });
                 }
             }
         }
         
-        // 2. Greedy Combination Search (If strict grammar fails, find ANY combination of 2-4 real words)
         const searchCombinations = (targetVowels) => {
             let matches = [];
             const dfs = (currentVowelIndex, currentWords) => {
@@ -321,14 +251,10 @@ class RhymeEngine {
                     if (currentWords.length > 0) matches.push([...currentWords]);
                     return;
                 }
-                if (currentWords.length >= 4) return; // Limit to 4 words
-                
+                if (currentWords.length >= 4) return;
                 let remainingVowels = targetVowels.substring(currentVowelIndex);
                 let candidates = this.dictionary.filter(w => remainingVowels.startsWith(w.v));
-                
-                // Sort by length descending to prioritize longer words
                 candidates.sort((a, b) => b.v.length - a.v.length || Math.random() - 0.5);
-                
                 let branchLimit = 0;
                 for (let candidate of candidates) {
                     currentWords.push(candidate);
@@ -347,30 +273,18 @@ class RhymeEngine {
             for (let match of comboMatches) {
                 let kataStr = match.map(w => w.k).join('');
                 let kanjiStr = match.map(w => w.w).join('・');
-                
                 if (!seenKatakana.has(kataStr) && kataStr !== inputWord) {
                     seenKatakana.add(kataStr);
-                    results.push({
-                        word: kataStr,
-                        matchType: `（${kanjiStr}）- 単語コンボ`,
-                        score: 95
-                    });
+                    results.push({ word: kataStr, matchType: `（${kanjiStr}）- 単語コンボ`, score: 95 });
                 }
             }
         }
 
-        // 3. Single word partial match (fallback for similar rhymes)
-
-        // 3. Fallback to Procedural Generation for guaranteed 100% matches
         while (results.length < 10) {
             let randomRhyme = generateRandomKatakanaRhyme(inputVowels);
             if (!seenKatakana.has(randomRhyme) && randomRhyme !== inputWord) {
                 seenKatakana.add(randomRhyme);
-                results.push({
-                    word: randomRhyme,
-                    matchType: 'AI生成のスキャット',
-                    score: 90
-                });
+                results.push({ word: randomRhyme, matchType: 'AI生成のスキャット', score: 90 });
             }
         }
 

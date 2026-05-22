@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let options = promptBuckets[len];
             return options[Math.floor(Math.random() * options.length)];
         }
-        // Fallback if no exact length phrase exists (generate exact length katakana)
+        // Fallback
         let fallbackText = "アイウエオカキクケコサシスセソタチツテトナニヌネノ".substring(0, len);
         return { text: fallbackText, vowels: engine.extractVowels(fallbackText).vowels };
     }
@@ -224,7 +224,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 wordInput.disabled = false;
                 rhyminBtn.disabled = false;
                 wordInput.focus();
-                // Resume timer roughly
                 countdownTimer.innerText = timeRemaining;
                 timerInterval = setInterval(() => {
                     timeRemaining--;
@@ -263,10 +262,11 @@ document.addEventListener('DOMContentLoaded', () => {
         wordInput.classList.add('hidden');
         countdownContainer.classList.add('hidden');
         
-        let rank = "ワックMC";
-        if (totalScore >= 800) rank = "伝説のラッパー";
-        else if (totalScore >= 500) rank = "実力派ライマー";
-        else if (totalScore >= 300) rank = "ストリートのルーキー";
+        let rank = "WACK";
+        if (totalScore >= 850) rank = "GOAT";
+        else if (totalScore >= 650) rank = "LEGEND";
+        else if (totalScore >= 450) rank = "OG";
+        else if (totalScore >= 250) rank = "Young Gun";
 
         matchInfo.classList.remove('hidden');
         resultDisplay.classList.remove('hidden');
