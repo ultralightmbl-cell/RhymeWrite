@@ -114,7 +114,7 @@ class RhymeEngine {
         this.isReady = false;
 
         if (typeof kuromoji !== 'undefined') {
-            kuromoji.builder({ dicPath: 'https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict' }).build((err, tokenizer) => {
+            kuromoji.builder({ dicPath: 'dict/' }).build((err, tokenizer) => {
                 if (err) {
                     console.error("Kuromoji dict load error", err);
                     return;
