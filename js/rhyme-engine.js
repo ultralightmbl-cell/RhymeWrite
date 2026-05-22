@@ -116,7 +116,16 @@ class RhymeEngine {
         if (typeof kuromoji !== 'undefined') {
             kuromoji.builder({ dicPath: 'dict/' }).build((err, tokenizer) => {
                 if (err) {
-                    console.error("Kuromoji dict load error", err);
+                    console.warn("Local dictionary load failed (likely CORS restriction on file:// protocol). Falling back to CDN...", err);
+                    kuromoji.builder({ dicPath: 'https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict' }).build((cdnErr, cdnTokenizer) => {
+                        if (cdnErr) {
+                            console.error("Kuromoji CDN dict load error", cdnErr);
+                            return;
+                        }
+                        this.tokenizer = cdnTokenizer;
+                        this.isReady = true;
+                        if (onReady) onReady();
+                    });
                     return;
                 }
                 this.tokenizer = tokenizer;
